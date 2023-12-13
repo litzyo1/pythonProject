@@ -1,16 +1,216 @@
-# This is a sample Python script.
+import random
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+def main():
+    welcome = ['Welcome to Hangman! You will chose a letter and try to guess '
+               'a random word that is generated Your choices are hangman, chairs, backpack, '
+               'computer, python, program, clocks, biology'
+               'you must try to guess the word correctly letter by letter'
+               'before you run out of attempts. Good luck!'
+               ]
+
+    for line in welcome:
+        print(line, sep='\n')
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+    play_again = True
+
+    while play_again:
+
+        words = ["hangman", "chairs", "backpack",
+                 "computer", "python", "program",
+                 "clocks", "biology",
+                 ]
+
+        chosen_word = random.choice(words).lower()
+        player_guess = None
+        guessed_letters = []
+        word_guessed = []
+        for letter in chosen_word:
+            word_guessed.append("-")
+        joined_word = None
+
+        HANGMAN = (
+"""
+-----
+|   |
+|
+|
+|
+|
+|
+|
+|
+--------
+""",
+"""
+-----
+|   |
+|   0
+|
+|
+|
+|
+|
+|
+--------
+""",
+"""
+-----
+|   |
+|   0
+|  -+-
+|
+|
+|
+|
+|
+--------
+""",
+"""
+-----
+|   |
+|   0
+| /-+-
+|
+|
+|
+|
+|
+--------
+""",
+"""
+-----
+|   |
+|   0
+| /-+-\
+|
+|
+|
+|
+|
+--------
+""",
+"""
+-----
+|   |
+|   0
+| /-+-\
+|   |
+|
+|
+|
+|
+--------
+""",
+"""
+-----
+|   |
+|   0
+| /-+-\
+|   |
+|   |
+|
+|
+|
+--------
+""",
+"""
+-----
+|   |
+|   0
+| /-+-\
+|   |
+|   |
+|  |
+|
+|
+--------
+""",
+"""
+-----
+|   |
+|   0
+| /-+-\
+|   |
+|   |
+|  |
+|  |
+|
+--------
+""",
+"""
+-----
+|   |
+|   0
+| /-+-\
+|   |
+|   |
+|  | |
+|  |
+|
+--------
+""",
+"""
+-----
+|   |
+|   0
+| /-+-\
+|   |
+|   |
+|  | |
+|  | |
+|
+--------
+""")
+
+        print(HANGMAN[0])
+        attempts = len(HANGMAN) - 1
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+        while (attempts != 0 and "-" in word_guessed):
+            print(("\nYou have {} attempts remaining").format(attempts))
+            joined_word = "".join(word_guessed)
+            print(joined_word)
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+            try:
+                player_guess = str(input("\nPlease select a letter between A-Z" + "\n> ")).lower()
+            except:
+                print("That is not valid input. Please try again.")
+                continue                
+            else: 
+                if not player_guess.isalpha():
+                    print("That is not a letter. Please try again.")
+                    continue
+                elif len(player_guess) > 1:
+                    print("That is more than one letter. Please try again.")
+                    continue
+                elif player_guess in guessed_letters:
+                    print("You have already guessed that letter. Please try again.")
+                    continue
+                else:
+                    pass
+
+            guessed_letters.append(player_guess)
+
+            for letter in range(len(chosen_word)):
+                if player_guess == chosen_word[letter]:
+                    word_guessed[letter] = player_guess
+
+            if player_guess not in chosen_word:
+                attempts -= 1
+                print(HANGMAN[(len(HANGMAN) - 1) - attempts])
+
+        if "-" not in word_guessed:
+            print(("\nCongratulations! {} was the word").format(chosen_word))
+        else:
+            print(("\nUnlucky! The word was {}.").format(chosen_word))
+
+        print("\nWould you like to play again?")
+
+        response = input("> ").lower()
+        if response not in ("yes", "y"):
+            play_again = False
+
+if __name__ == "__main__":
+    main()
+
